@@ -12,23 +12,20 @@
 </head>
 <body>
     <div id="root"></div>
-
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
-        const { Utensils, MapPin, RefreshCw, Store, CheckCircle2 } = lucide;
+        const { Utensils, MapPin, RefreshCw, Store } = lucide;
 
         const RESTAURANT_LIST = [
-            "참잘돼지국밥", "서울깍두기(설렁탕)", "돈카이(돈가스)", "스구식탁(샤브샤브)",
-            "비빔밥(우정)", "은화수 식당", "부산식(제육정식)", "포케,샌드위치(샌럽잇)",
-            "육회비빔밥", "일화정 연탄쭈꾸미", "개미집", "백소정(카레, 돈가스, 마제소바)",
-            "핵밥 (덮밥, 라멘, 돈가스)", "꼬막짬뽕"
+            "참잘돼지국밥", "서울깍두기", "돈카이", "스구식탁", "비빔밥(우정)", 
+            "은화수 식당", "부산식(제육)", "샌럽잇", "육회비빔밥", 
+            "일화정 연탄쭈꾸미", "개미집", "백소정", "핵밥", "꼬막짬뽕"
         ];
 
         function App() {
             const [picks, setPicks] = useState({ first: "1순위 식당", second: "2순위 식당" });
             const [isRolling, setIsRolling] = useState(false);
             const [showResult, setShowResult] = useState(false);
-            const [history, setHistory] = useState([]);
             const timerRef = useRef(null);
 
             const startRolling = () => {
@@ -42,50 +39,38 @@
                     setPicks({ first: r1, second: r2 });
                     if (++count >= 20) {
                         clearInterval(timerRef.current);
-                        const shuffled = [...RESTAURANT_LIST].sort(() => 0.5 - Math.random());
-                        const selected = { first: shuffled[0], second: shuffled[1] };
-                        setPicks(selected);
                         setIsRolling(false);
                         setShowResult(true);
-                        setHistory(prev => [`${selected.first} & ${selected.second}`, ...prev].slice(0, 5));
                     }
                 }, 80);
             };
 
             return (
-                <div className="min-h-screen bg-indigo-50 text-slate-800 p-4 flex flex-col items-center">
-                    <header className="w-full max-w-md text-center mb-6 mt-4">
-                        <h1 className="text-3xl font-extrabold text-indigo-600 flex items-center justify-center gap-2">
-                            <MapPin className="w-8 h-8" /> 오늘 점심 어디 가지?
+                <div className="min-h-screen bg-indigo-50 flex flex-col items-center p-4">
+                    <header className="text-center my-8">
+                        <h1 className="text-3xl font-bold text-indigo-600 flex items-center gap-2">
+                            <MapPin /> 오늘 점심 어디 가지?
                         </h1>
-                        <p className="text-slate-500 mt-2">고민될 땐 딱 2곳만 추천해드려요!</p>
                     </header>
-                    <main className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-indigo-100">
-                        <div className="bg-indigo-50/50 p-3 text-center border-b border-indigo-100 text-xs font-bold text-indigo-400">
-                            맛집 리스트 {RESTAURANT_LIST.length}곳
-                        </div>
-                        <div className="p-6 flex flex-col gap-4 min-h-[300px] justify-center text-center">
-                            <div className={`p-6 rounded-2xl border-2 transition-all ${showResult ? 'bg-indigo-50 border-indigo-500' : 'bg-slate-50 border-slate-100'}`}>
-                                <Store className={`w-12 h-12 mx-auto mb-3 ${showResult ? 'text-indigo-500' : 'text-slate-300'}`} />
-                                <h2 className="text-2xl font-black">{picks.first}</h2>
+                    <main className="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 border border-indigo-100">
+                        <div className="flex flex-col gap-4 min-h-[250px] justify-center text-center">
+                            <div className={`p-6 rounded-2xl border-2 ${showResult ? 'bg-indigo-50 border-indigo-500' : 'bg-slate-50 border-slate-100'}`}>
+                                <Store className="mx-auto mb-2 text-indigo-400" />
+                                <h2 className="text-2xl font-bold">{picks.first}</h2>
                             </div>
-                            <div className="p-5 rounded-2xl border-2 border-dashed bg-white border-slate-200">
-                                <h3 className="text-lg font-bold text-slate-600">{picks.second}</h3>
+                            <div className="p-4 rounded-2xl border-2 border-dashed bg-white border-slate-200">
+                                <h3 className="text-lg font-semibold text-slate-500">{picks.second}</h3>
                             </div>
                         </div>
-                        <div className="p-6 bg-slate-50 border-t">
-                            <button onClick={startRolling} disabled={isRolling} className="w-full py-4 rounded-xl text-xl font-bold bg-indigo-600 text-white shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
-                                {isRolling ? <RefreshCw className="animate-spin" /> : <Utensils />}
-                                {isRolling ? "식당 고르는 중..." : "식당 추천 받기"}
-                            </button>
-                        </div>
+                        <button onClick={startRolling} disabled={isRolling} className="w-full mt-6 py-4 bg-indigo-600 text-white rounded-xl text-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all">
+                            {isRolling ? <RefreshCw className="animate-spin" /> : <Utensils />}
+                            {isRolling ? "식당 고르는 중..." : "식당 추천 받기"}
+                        </button>
                     </main>
                 </div>
             );
         }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
